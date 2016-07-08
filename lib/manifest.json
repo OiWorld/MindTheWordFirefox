@@ -7,9 +7,12 @@
   "content_security_policy": "media-src 'self'; object-src 'self'; script-src 'self' https://www.google.com https://ssl.google-analytics.com;",
   "background" : {
     "scripts" : ["eventPage.js"],
-    "persistent": false
+    "persistent": true
   },
-  "options_page": "views/options.html",
+  "options_ui": {
+    "page": "/views/options.html",
+    "open_in_tab": true
+  },
   "browser_action" :
   {
     "default_icon" : "assets/img/48.png",
@@ -36,13 +39,18 @@
     "48" : "assets/img/48.png",
     "128" : "assets/img/128.png"
   },
+  "applications":{
+    "gecko": {
+      "id": "bruno@mtw.com"
+    }
+  },
   "permissions": [
     "http://google.com/",
     "tabs",
     "<all_urls>",
     "storage",
     "contextMenus",
-    "tts",
-    "unlimitedStorage"
+    "tts"
   ]
+
 }
