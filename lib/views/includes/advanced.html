@@ -1,0 +1,146 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <span>Color Settings</span>
+        <span class="glyphicon glyphicon-question-sign pull-right" data-toggle="tooltip" data-placement="bottom" title="Set the color in which translations appear."></span>
+      </div>
+      <div class="panel-body" style="min-height: 216px">
+        <div class="input-group">
+          <span class="input-group-addon">Text Color</span>
+          <input id="text-colorpicker" type="text" ng-model="opctrl.textColor" class="form-control"/>
+        </div>
+        <br>
+        <div class="input-group">
+          <span class="input-group-addon">Background Color</span>
+          <input id="bg-colorpicker" type="text" ng-model="opctrl.backColor" class="form-control"/>
+        </div>
+        <br>
+        <p>
+          This is an
+          <span style="{{opctrl.translatedWordStyle}}">awesome</span>
+          style!
+        </p>
+        <small>
+          <span class="label label-danger">Note:</span>
+          <span style = "color: rgba(86, 179, 90, 1.00);">rgba(86, 179, 90, 1.00), </span>
+          <span style = "color: rgba(164, 59, 64, 1.00);">rgba(164, 59, 64, 1.00)</span>
+          and <span style = "color: rgba(209, 29, 29, 1.00)">rgba(209, 29, 29, 1.00)</span>
+          have been reserved for words in
+          <span style = "color: rgba(86, 179, 90, 1.00);"> easy,</span>
+          <span style = "color: rgba(164, 59, 64, 1.00);"> normal</span>
+          and <span style = "color: rgba(209, 29, 29, 1.00)"> hard </span>
+          buckets respectively
+        </small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <span>Word Configuration</span>
+        <span class="glyphicon glyphicon-question-sign pull-right" data-toggle="tooltip" data-placement="bottom" title="Configure word length and set n-grams"></span>
+      </div>
+      <div class="panel-body" style="min-height: 216px">
+        <form class="form-inline">
+          <div class="form-group">
+            <label for="min-word-len">Minimum word length
+            </label>
+            <input type="number" id="min-word-len" class="form-control" ng-model="opctrl.minWordLength" ng-change="opctrl.setMinWordLength()">
+          </div>
+        </form>
+        <form class="form-inline">
+          <div class="form-group">
+            <label for="ngram-min">Translated sequences should have at least
+            </label>
+            <input type="number" id="ngram-min" class="form-control" style="width:50px" ng-model="opctrl.ngramMin" ng-change="opctrl.setNgramMin()">
+            <label for="ngram-max">and at most
+            </label>
+            <input type="number" id="ngram-max" class="form-control" style="width:50px" ng-model="opctrl.ngramMax" ng-change="opctrl.setNgramMax()">
+            <label>words</label>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="panel panel-primary table-panel">
+      <div class="panel-heading">
+        <span>User Defined Translations</span>
+        <span class="glyphicon glyphicon-question-sign pull-right" data-toggle="tooltip" data-placement="bottom" title="Define translations for specific words. These words will override normal translations"></span>
+      </div>
+      <div class="panel-body">
+        <div class="input-group">
+          <input type="text" ng-model="opctrl.original" class="form-control">
+          <span class="input-group-addon">:</span>
+          <input type="text" ng-model="opctrl.translated" class="form-control">
+          <span class="input-group-btn">
+            <button class="btn btn-danger" type="submit" ng-click="opctrl.addUserDefinedTranslation()">Add</button>
+          </span>
+        </div>
+      </div>
+      <table class="table table-list">
+        <thead>
+          <tr>
+            <th>Original</th>
+            <th>Translated</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="translation in opctrl.userDefinedTranslationList | startFrom : opctrl.userDefinedTranslationPage*4 | limitTo : 4">
+            <td>{{translation[0]}}</td>
+            <td>{{translation[1]}}</td>
+            <td>
+              <span class="pull-right">
+                <button class="btn btn-warning" ng-click="opctrl.removeUserDefinedTranslation(translation[0])">
+                  <span class="glyphicon glyphicon-trash"></span>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-center" style="bottom: 0">
+        <ul class="pagination">
+          <li ng-repeat="x in opctrl.range(opctrl.userDefinedTranslationList.length) track by $index" class="pointer" ng-class="{'active': opctrl.userDefinedTranslationPage === $index}">
+            <a ng-click="opctrl.userDefinedTranslationPage = $index">{{$index + 1}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel panel-primary table-panel">
+      <div class="panel-heading">
+        <span>Playback Settings</span>
+        <span class="glyphicon glyphicon-question-sign pull-right" data-toggle="tooltip" data-placement="bottom" title="Audio Settings for speaking translated words"></span>
+      </div>
+      <div class="panel-body">
+        <br>
+        <form class="form">
+          <div class="form-group">
+            <label>
+                <span id="lang_volume" class="locale">Default Volume Level</span>
+                <input id="volume" ng-model="opctrl.volume" ng-change="opctrl.updatePlaybackOptions()" type="range" min="0.2" max="1.0" value="0.5" step='0.1'></input>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>
+                <span id="lang_rate" class="locale">Speech rate</span>
+                <input id="rate" ng-model="opctrl.rate" ng-change="opctrl.updatePlaybackOptions()" type="range"  min="0.5" max="4.0" value="1.0" step="0.1"></input>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>
+                <span id="lang_pitch" class="locale">Pitch</span>
+                <input id="pitch" type="range" ng-change="opctrl.updatePlaybackOptions()" ng-model="opctrl.pitch" min="0.0" max="2.0" value="1.0" step="0.2"></input>
+            </label>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
